@@ -31,21 +31,18 @@ Para começar a usar a API, siga estas etapas:
 git clone <URL_DO_SEU_REPOSITORIO>
 
 csharp
-Copy code
 
 2. Instale as dependências do projeto com o comando:
 
 npm install
 
 markdown
-Copy code
 
 3. Inicie o servidor da API com o comando:
 
 npm start
 
 bash
-Copy code
 
 4. Você pode agora acessar a API localmente em [http://localhost:4001/envelopes](http://localhost:4001/envelopes) e começar a gerenciar seus envelopes de orçamento.
 
