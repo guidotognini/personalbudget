@@ -1,33 +1,29 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const {envelopes, budget} = require('./envelopesDb');
-const fs = require('fs');
+const {envelopes} = require('./envelopesDb');
+const {getAllEnvelopes, createEnvelope, getEnvelopeById, deleteEnvelope, updateEnvelope, transfer, appendIndex} = require('./controller');
 
-app.get('/envelopes', (req, res, next) => {
-  res.json(envelopes)
+const port = process.env.PORT || 4001;
+
+const router = express.Router();
+
+router.param('id', appendIndex)
+
+router.route('/')
+  .get(getAllEnvelopes)
+  .post(createEnvelope)
+ 
+router.route('/:id')
+  .get(getEnvelopeById)
+  .delete(deleteEnvelope)
+
+router.put('/:id/usemoney', updateEnvelope)
+
+router.post('/transfer/:from/:to', transfer)
+
+app.use('/envelopes', router);
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`)
 })
-
-app.get('/envelopes/:id', (req, res, next) => {
-  const envelopeIndex = envelopes.findIndex(env => env.id === Number(req.params.id))
-  res.json(envelopes[envelopeIndex])
-})
-
-app.post('/envelopes', (req, res, next) => {
-  let id = envelopes.reduce((max,env) => {return Math.max(max, env.id)}, -Infinity)
-  envelopes.push({
-    id: id++,
-    category: req.query.category,
-    allocation: Number(req.query.allocation),
-    amount_spent: Number(req.query.amount)
-  })
-  res.send(envelopes)
-})
-
-console.log(budget)
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server listening on port ${process.env.PORT}`)
-})
-
-/* const categoryIndex = envelopes.findIndex(env => env.category = env.req.category) */
